@@ -221,7 +221,7 @@ The valuable U has indeed helped witht he accuracy. This is, however, expected, 
 
 Does age cause an effect in a person's happiness?
 
-This is a case where, including the marriage status yields misleading coefficients when analyzing the regression results, which is mainly caused by <a href="https://en.wikipedia.org/wiki/Simpson%27s_paradox">Simpson's Paradox</a>. Does this also harm the accuracy?
+This is a case where including the marriage status yields misleading coefficients when analyzing the regression results, which is mainly caused by <a href="https://en.wikipedia.org/wiki/Simpson%27s_paradox">Simpson's Paradox</a>. Does this also harm the accuracy?
 
 ### Data
 
