@@ -215,7 +215,7 @@ ggplot(data = family_data$results, aes(x = .metric, y = .estimate, colour = wflo
   geom_line()
 ```
 
-The valuable U has indeed helped witht he accuracy. This is, however, expected, since we're giving more relevant information to the model. The next example should be a more interesting experiment.
+The valuable U has indeed helped with the accuracy. This is, however, expected, since we're giving more relevant information to the model. The next example should be a more interesting experiment.
 
 ## The happiness example
 
