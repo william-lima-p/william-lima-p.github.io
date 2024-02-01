@@ -114,11 +114,11 @@ family_data$folds
 # Standardize the data for regression models
 family_data$recipes$lm$wo_U <-
   recipe(C ~ G + P, data = family_data$train) %>%
-  step_mutate_at(all_predictors(), fn = \(x) x %>% scale() %>% .[,1])
+  step_normalize(all_predictors())
 
 family_data$recipes$lm$w_U <-
   recipe(C ~ G + P + U, data = family_data$train) %>%
-  step_mutate_at(all_predictors(), fn = \(x) x %>% scale() %>% .[,1])
+  step_normalize(all_predictors())
 
 family_data$wf_sets$lm <-
   workflow_set(
@@ -170,7 +170,8 @@ autoplot(
   rank_metric = "rsq",
   metric = "rsq",
   select_best = TRUE
-)
+) +
+  geom_text(aes(y = mean, label = wflow_id), nudge_x = -0.25, angle = 90, hjust = 0.5)
 ```
 
 ```{r}
@@ -179,7 +180,8 @@ autoplot(
   rank_metric = "rsq",
   metric = "rsq",
   select_best = TRUE
-)
+) +
+  geom_text(aes(y = mean, label = wflow_id), nudge_x = -0.25, angle = 90, hjust = 0.5)
 ```
 
 We should also plot each set of predictions in the test set. For each workflow, let us extract the best parameters and get the result in the test set.
