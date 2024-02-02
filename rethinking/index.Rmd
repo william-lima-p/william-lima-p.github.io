@@ -177,8 +177,8 @@ autoplot(
 ```{r}
 autoplot(
   family_data$results_final,
-  rank_metric = "rsq",
-  metric = "rsq",
+  rank_metric = "rmse",
+  metric = "rmse",
   select_best = TRUE
 ) +
   geom_text(aes(y = mean, label = wflow_id), nudge_x = -0.25, angle = 90, hjust = 0.5)
