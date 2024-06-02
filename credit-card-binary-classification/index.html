@@ -81,16 +81,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<script src="flow_files/libs/clipboard/clipboard.min.js"></script>
-<script src="flow_files/libs/quarto-html/quarto.js"></script>
-<script src="flow_files/libs/quarto-html/popper.min.js"></script>
-<script src="flow_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="flow_files/libs/quarto-html/anchor.min.js"></script>
-<link href="flow_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="flow_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="flow_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="flow_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="flow_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="index_files/libs/clipboard/clipboard.min.js"></script>
+<script src="index_files/libs/quarto-html/quarto.js"></script>
+<script src="index_files/libs/quarto-html/popper.min.js"></script>
+<script src="index_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="index_files/libs/quarto-html/anchor.min.js"></script>
+<link href="index_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="index_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="index_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="index_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -189,7 +189,7 @@ max    5.150412e+06    14.000000   1.575000e+06    -7705.000000  365243.000000  
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="flow_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -531,7 +531,7 @@ Name: label, dtype: float64</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="flow_files/figure-html/unnamed-chunk-18-3.png" class="img-fluid figure-img" width="1728"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-18-3.png" class="img-fluid figure-img" width="1728"></p>
 </figure>
 </div>
 </div>
@@ -541,7 +541,7 @@ Name: label, dtype: float64</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="flow_files/figure-html/unnamed-chunk-19-5.png" class="img-fluid figure-img" width="1728"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-19-5.png" class="img-fluid figure-img" width="1728"></p>
 </figure>
 </div>
 </div>
@@ -593,7 +593,7 @@ Name: label, dtype: float64</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>plot_tuning_results(wf_xgb_2.get_wf_results())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="flow_files/figure-html/unnamed-chunk-22-7.png" class="img-fluid" width="1728"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-22-7.png" class="img-fluid" width="1728"></p>
 </div>
 </div>
 <p>It seems like we got better results for xgboost with this last tuning.</p>
@@ -632,7 +632,7 @@ Name: label, dtype: float64</code></pre>
 <span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_rf'</span>, <span class="st">'wf_xgb'</span>, <span class="st">'wf_xgb_2'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fdbe0f3ff10&gt;
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7ff517399e80&gt;
     Workflow Pipeline           Metric     Score
 0      wf_rf   simple         f1_score  0.592593
 1      wf_rf   simple     recall_score  0.842105
@@ -650,7 +650,7 @@ Name: label, dtype: float64</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="flow_files/figure-html/unnamed-chunk-23-9.png" class="img-fluid figure-img" width="590"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-23-9.png" class="img-fluid figure-img" width="590"></p>
 </figure>
 </div>
 </div>
@@ -664,11 +664,11 @@ Name: label, dtype: float64</code></pre>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm)</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>disp.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7fdbe0da2430&gt;</code></pre>
+<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7ff5173c9f10&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="flow_files/figure-html/unnamed-chunk-24-11.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-24-11.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -730,7 +730,7 @@ Name: label, dtype: float64</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_rf'</span>, <span class="st">'wf_xgb'</span>, <span class="st">'wf_xgb_2'</span>, <span class="st">'wf_noup_rf'</span>, <span class="st">'wf_noup_xgb'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fdbe0c27dc0&gt;
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7ff5170caf10&gt;
        Workflow     Pipeline           Metric     Score
 0         wf_rf       simple         f1_score  0.592593
 1         wf_rf       simple     recall_score  0.842105
@@ -754,7 +754,7 @@ Name: label, dtype: float64</code></pre>
 19  wf_noup_xgb       simple   accuracy_score  0.922581</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="flow_files/figure-html/unnamed-chunk-28-13.png" class="img-fluid" width="616"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-28-13.png" class="img-fluid" width="616"></p>
 </div>
 </div>
 <p>Models performed better without upsampling.</p>
@@ -764,11 +764,11 @@ Name: label, dtype: float64</code></pre>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm)</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>disp.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7fdbe1408cd0&gt;</code></pre>
+<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7ff517645e80&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="flow_files/figure-html/unnamed-chunk-29-15.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-29-15.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -816,7 +816,7 @@ Name: label, dtype: float64</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_noup_rf'</span>, <span class="st">'wf_noup_xgb'</span>, <span class="st">'wf_pca_rf'</span>, <span class="st">'wf_pca_xgb'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fdbe08ecc40&gt;
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7ff516ee6eb0&gt;
        Workflow     Pipeline           Metric     Score
 0    wf_noup_rf  noup_simple         f1_score  0.655172
 1    wf_noup_rf  noup_simple     recall_score  0.826087
@@ -836,20 +836,20 @@ Name: label, dtype: float64</code></pre>
 15   wf_pca_xgb          pca   accuracy_score  0.919355</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="flow_files/figure-html/unnamed-chunk-33-17.png" class="img-fluid" width="616"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-33-17.png" class="img-fluid" width="616"></p>
 </div>
 </div>
 <p>So, PCA led to worse results. This probably means that the variables created do not separate well between <code>y</code> labels. Let’s check that. First, let’s see the best number of components.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>plot_tuning_results(wf_pca_rf.get_wf_results())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="flow_files/figure-html/unnamed-chunk-34-19.png" class="img-fluid" width="1728"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-34-19.png" class="img-fluid" width="1728"></p>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>plot_tuning_results(wf_pca_xgb.get_wf_results())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="flow_files/figure-html/unnamed-chunk-35-21.png" class="img-fluid" width="1728"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-35-21.png" class="img-fluid" width="1728"></p>
 </div>
 </div>
 <p>Which is <code>21</code>.</p>
