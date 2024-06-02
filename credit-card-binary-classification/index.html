@@ -632,7 +632,7 @@ Name: label, dtype: float64</code></pre>
 <span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_rf'</span>, <span class="st">'wf_xgb'</span>, <span class="st">'wf_xgb_2'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fe870bc5f10&gt;
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fdbe0f3ff10&gt;
     Workflow Pipeline           Metric     Score
 0      wf_rf   simple         f1_score  0.592593
 1      wf_rf   simple     recall_score  0.842105
@@ -664,7 +664,7 @@ Name: label, dtype: float64</code></pre>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm)</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>disp.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7fe870c23040&gt;</code></pre>
+<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7fdbe0da2430&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -730,7 +730,7 @@ Name: label, dtype: float64</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_rf'</span>, <span class="st">'wf_xgb'</span>, <span class="st">'wf_xgb_2'</span>, <span class="st">'wf_noup_rf'</span>, <span class="st">'wf_noup_xgb'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fe87096d0a0&gt;
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fdbe0c27dc0&gt;
        Workflow     Pipeline           Metric     Score
 0         wf_rf       simple         f1_score  0.592593
 1         wf_rf       simple     recall_score  0.842105
@@ -764,7 +764,7 @@ Name: label, dtype: float64</code></pre>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm)</span>
 <span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>disp.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7fe870ecfac0&gt;</code></pre>
+<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7fdbe1408cd0&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -816,7 +816,7 @@ Name: label, dtype: float64</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_noup_rf'</span>, <span class="st">'wf_noup_xgb'</span>, <span class="st">'wf_pca_rf'</span>, <span class="st">'wf_pca_xgb'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fe8705ca9d0&gt;
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fdbe08ecc40&gt;
        Workflow     Pipeline           Metric     Score
 0    wf_noup_rf  noup_simple         f1_score  0.655172
 1    wf_noup_rf  noup_simple     recall_score  0.826087
