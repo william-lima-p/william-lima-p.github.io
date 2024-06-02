@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.0.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Credit Card Binary Classification</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="flow_files/libs/clipboard/clipboard.min.js"></script>
+<script src="flow_files/libs/quarto-html/quarto.js"></script>
+<script src="flow_files/libs/quarto-html/popper.min.js"></script>
+<script src="flow_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="flow_files/libs/quarto-html/anchor.min.js"></script>
+<link href="flow_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="flow_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="flow_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="flow_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="flow_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-full">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#about-the-data-frame" id="toc-about-the-data-frame" class="nav-link active" data-scroll-target="#about-the-data-frame">About the data frame</a></li>
+  <li><a href="#cleaning-data" id="toc-cleaning-data" class="nav-link" data-scroll-target="#cleaning-data">Cleaning data</a></li>
+  <li><a href="#tuning" id="toc-tuning" class="nav-link" data-scroll-target="#tuning">Tuning</a>
+  <ul class="collapse">
+  <li><a href="#upsampling" id="toc-upsampling" class="nav-link" data-scroll-target="#upsampling">Upsampling</a></li>
+  <li><a href="#without-upsampling" id="toc-without-upsampling" class="nav-link" data-scroll-target="#without-upsampling">Without upsampling</a></li>
+  <li><a href="#pca" id="toc-pca" class="nav-link" data-scroll-target="#pca">PCA</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<main class="content column-page-left" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Credit Card Binary Classification</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+
+</div>
+<section id="about-the-data-frame" class="level1">
+<h1>About the data frame</h1>
+<p>You can find more information about this nice <a href="https://www.kaggle.com/datasets/rohitudageri/credit-card-details">dataset available in Kaggle</a>. We basically want to predict if a person has their credit card approved.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> networkx <span class="im">as</span> nx</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>/home/william/anaconda3/lib/python3.9/site-packages/scipy/__init__.py:146: UserWarning: A NumPy version &gt;=1.16.5 and &lt;1.23.0 is required for this version of SciPy (detected version 1.24.3
+  warnings.warn(f"A NumPy version &gt;={np_minversion} and &lt;{np_maxversion}"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.max_rows'</span>, <span class="dv">20</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.max_columns'</span>, <span class="dv">18</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.width'</span>, <span class="dv">2000</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.read_csv(<span class="st">'datasets/credit/Credit_card.csv'</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> pd.read_csv(<span class="st">'datasets/credit/Credit_card_label.csv'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.describe())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Ind_ID     CHILDREN  Annual_income  Birthday_count  Employed_days  Mobile_phone   Work_Phone        Phone     EMAIL_ID  Family_Members
+count  1.548000e+03  1548.000000   1.525000e+03     1526.000000    1548.000000        1548.0  1548.000000  1548.000000  1548.000000     1548.000000
+mean   5.078920e+06     0.412791   1.913993e+05   -16040.342071   59364.689922           1.0     0.208010     0.309432     0.092377        2.161499
+std    4.171759e+04     0.776691   1.132530e+05     4229.503202  137808.062701           0.0     0.406015     0.462409     0.289651        0.947772
+min    5.008827e+06     0.000000   3.375000e+04   -24946.000000  -14887.000000           1.0     0.000000     0.000000     0.000000        1.000000
+25%    5.045070e+06     0.000000   1.215000e+05   -19553.000000   -3174.500000           1.0     0.000000     0.000000     0.000000        2.000000
+50%    5.078842e+06     0.000000   1.665000e+05   -15661.500000   -1565.000000           1.0     0.000000     0.000000     0.000000        2.000000
+75%    5.115673e+06     1.000000   2.250000e+05   -12417.000000    -431.750000           1.0     0.000000     1.000000     0.000000        3.000000
+max    5.150412e+06    14.000000   1.575000e+06    -7705.000000  365243.000000           1.0     1.000000     1.000000     1.000000       15.000000</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Index(['Ind_ID', 'label'], dtype='object')</code></pre>
+</div>
+</div>
+</section>
+<section id="cleaning-data" class="level1">
+<h1>Cleaning data</h1>
+<p>Let’s start by making sure that both data frames have their ids in the same order.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> X.merge(y, on<span class="op">=</span><span class="st">'Ind_ID'</span>, how<span class="op">=</span><span class="st">'left'</span>)[<span class="st">'label'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now it’s safe to get rid of <code>Ind_ID</code> column. We don’t want a feature that uniquely tracks specific individuals, per se.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>X.drop(columns<span class="op">=</span>[<span class="st">'Ind_ID'</span>], inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We should also look for correlated columns. If two features are, for example, linearly correlated – say <code>np.arange(10)</code> and <code>2 * np.arange(10)</code> – they basically tell the same information. By removing one of them, we help the model to train with only the necessary features. We don’t want the “same” feature to be appearing in different <a href="https://crunchingthedata.com/mtry-in-random-forests/">feature samples</a> in tree models, for example.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sns.heatmap(X.select_dtypes(include<span class="op">=</span>np.number).corr(), cmap<span class="op">=</span><span class="st">"YlGnBu"</span>, annot<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="flow_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Weirdly enough, the column <code>Mobile_phone</code> has only <code>NaN</code> correlations. That is because the data does not vary. We should remove near-zero variance feature, normally. That will be a step in our pipeline, later.</p>
+<p>Also, although <code>CHILDREN</code> and <code>Family_Members</code> are highly correlated, 0.89 might not be enough to drop a column. But I created the function anyway, in case it’s useful later.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> remove_correlated(df, threshold<span class="op">=</span><span class="fl">0.95</span>):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    numeric_df <span class="op">=</span> df.select_dtypes(include<span class="op">=</span>np.number)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> too_correlated(x, y):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> df[x].corr(df[y]) <span class="op">&gt;</span> threshold</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    eqv_classes <span class="op">=</span> nx.equivalence_classes(numeric_df.columns, too_correlated)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    eqv_classes_repr <span class="op">=</span> {<span class="bu">next</span>(<span class="bu">iter</span>(<span class="bu">list</span>(eqv_classes)[i])) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(eqv_classes))}</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df.drop(columns<span class="op">=</span><span class="bu">set</span>(numeric_df.columns) <span class="op">-</span> eqv_classes_repr)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> remove_correlated(X, threshold<span class="op">=</span><span class="fl">0.95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, it’s important to check the missing values within the data frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's check now where there is NaN</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X[X.isnull().<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     GENDER Car_Owner Propert_Owner  CHILDREN  Annual_income           Type_Income                      EDUCATION Marital_status       Housing_type  Birthday_count  Employed_days  Mobile_phone  Work_Phone  Phone  EMAIL_ID Type_Occupation  Family_Members
+0         M         Y             Y         0       180000.0             Pensioner               Higher education        Married  House / apartment        -18772.0         365243             1           0      0         0             NaN               2
+1         F         Y             N         0       315000.0  Commercial associate               Higher education        Married  House / apartment        -13557.0           -586             1           1      1         0             NaN               2
+2         F         Y             N         0       315000.0  Commercial associate               Higher education        Married  House / apartment             NaN           -586             1           1      1         0             NaN               2
+3         F         Y             N         0            NaN  Commercial associate               Higher education        Married  House / apartment        -13557.0           -586             1           1      1         0             NaN               2
+4         F         Y             N         0       315000.0  Commercial associate               Higher education        Married  House / apartment        -13557.0           -586             1           1      1         0             NaN               2
+...     ...       ...           ...       ...            ...                   ...                            ...            ...                ...             ...            ...           ...         ...    ...       ...             ...             ...
+1532      M         N             Y         0       157500.0  Commercial associate               Higher education        Married  House / apartment        -15423.0          -1200             1           1      1         0             NaN               2
+1535      F         N             N         0       144000.0               Working  Secondary / secondary special        Married  House / apartment        -19984.0          -4662             1           0      1         0             NaN               2
+1541      F         N             Y         2       225000.0               Working               Higher education        Married  House / apartment             NaN          -1648             1           1      1         0     Accountants               4
+1543      F         N             Y         0            NaN  Commercial associate               Higher education        Married  House / apartment        -11957.0          -2182             1           0      0         0        Managers               2
+1547      F         Y             Y         0       225000.0               Working               Higher education        Married  House / apartment        -16601.0          -2859             1           0      0         0             NaN               2
+
+[523 rows x 17 columns]</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get proportion of NaN present in each column</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X.<span class="bu">apply</span>(<span class="kw">lambda</span> x: <span class="bu">sum</span>(x.isna()) <span class="op">/</span> <span class="bu">len</span>(x), axis<span class="op">=</span><span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GENDER             0.004522
+Car_Owner          0.000000
+Propert_Owner      0.000000
+CHILDREN           0.000000
+Annual_income      0.014858
+Type_Income        0.000000
+EDUCATION          0.000000
+Marital_status     0.000000
+Housing_type       0.000000
+Birthday_count     0.014212
+Employed_days      0.000000
+Mobile_phone       0.000000
+Work_Phone         0.000000
+Phone              0.000000
+EMAIL_ID           0.000000
+Type_Occupation    0.315245
+Family_Members     0.000000
+dtype: float64</code></pre>
+</div>
+</div>
+<p>This is an interesting situation. Should we remove the data where <code>NaN</code> is present? Well, if <code>NaN</code> data appears during production, we need to be able to predict nonetheless in case they’re present. Some types of models, like xgboost, handle <code>NaN</code> well, so we wouldn’t have to change anything. For other models, we require the <code>NaN</code> values to be replaced by something else, like the median, or by using the knn method. If it’s a categorical variable, the <code>NaN</code> can be encoded by <code>OneHotEncoder</code> anyway. But we could replace them beforehand with the most common value in each feature, if we wanted so. Another interesting approach is to train another model to try to predict the <code>NaN</code> in the columns. This is easily doable by <code>sklearn</code>’s <code>IterativeImputer</code>.</p>
+<p>It might be a good idea to check if different “recipes” – called pipelines – lead to more accurate models. For example: if I replace <code>NaN</code> with the mean, will it improve the model’s accuracy measures?</p>
+</section>
+<section id="tuning" class="level1">
+<h1>Tuning</h1>
+<p>Our plan is to use cross-validation, which means that the data preparations mentioned above must be done at each fold (not including the test fold), and not in the training data set beforehand, specially because KNN imputing relies on distances, and consequently the numeric features need to be normalized.</p>
+<p>Data transformations in general need to be done at each fold, but there are exceptions, such as <a href="https://stats.stackexchange.com/questions/599508/do-we-one-hot-encode-create-dummy-variables-before-or-after-train-test-split">one-hot encoding</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>encoder <span class="op">=</span> ColumnTransformer([(<span class="st">'encode'</span>, OneHotEncoder(), X.select_dtypes(include<span class="op">=</span><span class="bu">object</span>).columns)], remainder<span class="op">=</span><span class="st">'passthrough'</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>encoder.fit(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<style>#sk-container-id-1 {color: black;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>ColumnTransformer(remainder='passthrough',
+                  transformers=[('encode', OneHotEncoder(),
+                                 Index(['GENDER', 'Car_Owner', 'Propert_Owner', 'Type_Income', 'EDUCATION', 'Marital_status', 'Housing_type', 'Type_Occupation'], dtype='object'))])</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br>On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden=""><div class="sk-item sk-dashed-wrapped"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox"><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">ColumnTransformer</label><div class="sk-toggleable__content"><pre>ColumnTransformer(remainder='passthrough',
+                  transformers=[('encode', OneHotEncoder(),
+                                 Index(['GENDER', 'Car_Owner', 'Propert_Owner', 'Type_Income', 'EDUCATION', 'Marital_status', 'Housing_type', 'Type_Occupation'], dtype='object'))])</pre></div></div></div><div class="sk-parallel"><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-2" type="checkbox"><label for="sk-estimator-id-2" class="sk-toggleable__label sk-toggleable__label-arrow">encode</label><div class="sk-toggleable__content"><pre>Index(['GENDER', 'Car_Owner', 'Propert_Owner', 'Type_Income', 'EDUCATION', 'Marital_status', 'Housing_type', 'Type_Occupation'], dtype='object')</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-3" type="checkbox"><label for="sk-estimator-id-3" class="sk-toggleable__label sk-toggleable__label-arrow">OneHotEncoder</label><div class="sk-toggleable__content"><pre>OneHotEncoder()</pre></div></div></div></div></div></div><div class="sk-parallel-item"><div class="sk-item"><div class="sk-label-container"><div class="sk-label sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-4" type="checkbox"><label for="sk-estimator-id-4" class="sk-toggleable__label sk-toggleable__label-arrow">remainder</label><div class="sk-toggleable__content"><pre>['CHILDREN', 'Annual_income', 'Birthday_count', 'Employed_days', 'Mobile_phone', 'Work_Phone', 'Phone', 'EMAIL_ID', 'Family_Members']</pre></div></div></div><div class="sk-serial"><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-5" type="checkbox"><label for="sk-estimator-id-5" class="sk-toggleable__label sk-toggleable__label-arrow">passthrough</label><div class="sk-toggleable__content"><pre>passthrough</pre></div></div></div></div></div></div></div></div></div></div>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> pd.DataFrame(encoder.transform(X), columns<span class="op">=</span>encoder.get_feature_names_out())</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      encode__GENDER_F  encode__GENDER_M  encode__GENDER_nan  encode__Car_Owner_N  encode__Car_Owner_Y  encode__Propert_Owner_N  encode__Propert_Owner_Y  encode__Type_Income_Commercial associate  encode__Type_Income_Pensioner  ...  remainder__CHILDREN  remainder__Annual_income  remainder__Birthday_count  remainder__Employed_days  remainder__Mobile_phone  remainder__Work_Phone  remainder__Phone  remainder__EMAIL_ID  remainder__Family_Members
+0                  0.0               1.0                 0.0                  0.0                  1.0                      0.0                      1.0                                       0.0                            1.0  ...                  0.0                  180000.0                   -18772.0                  365243.0                      1.0                    0.0               0.0                  0.0                        2.0
+1                  1.0               0.0                 0.0                  0.0                  1.0                      1.0                      0.0                                       1.0                            0.0  ...                  0.0                  315000.0                   -13557.0                    -586.0                      1.0                    1.0               1.0                  0.0                        2.0
+2                  1.0               0.0                 0.0                  0.0                  1.0                      1.0                      0.0                                       1.0                            0.0  ...                  0.0                  315000.0                        NaN                    -586.0                      1.0                    1.0               1.0                  0.0                        2.0
+3                  1.0               0.0                 0.0                  0.0                  1.0                      1.0                      0.0                                       1.0                            0.0  ...                  0.0                       NaN                   -13557.0                    -586.0                      1.0                    1.0               1.0                  0.0                        2.0
+4                  1.0               0.0                 0.0                  0.0                  1.0                      1.0                      0.0                                       1.0                            0.0  ...                  0.0                  315000.0                   -13557.0                    -586.0                      1.0                    1.0               1.0                  0.0                        2.0
+...                ...               ...                 ...                  ...                  ...                      ...                      ...                                       ...                            ...  ...                  ...                       ...                        ...                       ...                      ...                    ...               ...                  ...                        ...
+1543               1.0               0.0                 0.0                  1.0                  0.0                      0.0                      1.0                                       1.0                            0.0  ...                  0.0                       NaN                   -11957.0                   -2182.0                      1.0                    0.0               0.0                  0.0                        2.0
+1544               1.0               0.0                 0.0                  1.0                  0.0                      1.0                      0.0                                       1.0                            0.0  ...                  0.0                  225000.0                   -10229.0                   -1209.0                      1.0                    0.0               0.0                  0.0                        1.0
+1545               0.0               1.0                 0.0                  0.0                  1.0                      0.0                      1.0                                       0.0                            0.0  ...                  2.0                  180000.0                   -13174.0                   -2477.0                      1.0                    0.0               0.0                  0.0                        4.0
+1546               0.0               1.0                 0.0                  0.0                  1.0                      1.0                      0.0                                       0.0                            0.0  ...                  0.0                  270000.0                   -15292.0                    -645.0                      1.0                    1.0               1.0                  0.0                        2.0
+1547               1.0               0.0                 0.0                  0.0                  1.0                      0.0                      1.0                                       0.0                            0.0  ...                  0.0                  225000.0                   -16601.0                   -2859.0                      1.0                    0.0               0.0                  0.0                        2.0
+
+[1548 rows x 55 columns]</code></pre>
+</div>
+</div>
+<p>Let’s now create various pipelines and use them during cross-validation when training. We will compare the results later.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder, StandardScaler, MinMaxScaler</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We need, before anything else, to split the data between train and test. Here, we stratify to make sure that both of them have similar class proportions. It looks like, by the way, the classes are very imbalanced. Hence, it might be a good idea to tune hyperparameters that try to counter that (such as <code>scale_pos_weight</code> in the case of xgboost), or to upsample the training data set. The latter also <a href="https://kiwidamien.github.io/how-to-do-cross-validation-when-upsampling-data.html">needs to be done at each fold</a> (not including the test fold).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">.2</span>, stratify<span class="op">=</span>y, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_train.value_counts(normalize<span class="op">=</span><span class="va">True</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0    0.886914
+1    0.113086
+Name: label, dtype: float64</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(y_test.value_counts(normalize<span class="op">=</span><span class="va">True</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0    0.887097
+1    0.112903
+Name: label, dtype: float64</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We'll use this fraction later</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>y_proportions <span class="op">=</span> y_train.value_counts(normalize<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>scale_pos_wight_suggestion <span class="op">=</span> y_proportions.loc[<span class="dv">0</span>] <span class="op">/</span> y_proportions.loc[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="upsampling" class="level2">
+<h2 class="anchored" data-anchor-id="upsampling">Upsampling</h2>
+<p>We’ll try out the upsampling strategy first. Let’s create some pipelines. Each will handle data differently. Eventually, we will apply the different pipelines to different classifiers, to see which performs the best.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.experimental <span class="im">import</span> enable_iterative_imputer</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer, IterativeImputer, KNNImputer</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># from sklearn.pipeline import Pipeline</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># We want imblearn's Pipeline method so that we can upsample</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> imblearn.pipeline <span class="im">import</span> Pipeline</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_selection <span class="im">import</span> VarianceThreshold</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> StratifiedKFold</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> imblearn.over_sampling <span class="im">import</span> SMOTE</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>simple_pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'impute'</span>, SimpleImputer(strategy<span class="op">=</span><span class="st">'median'</span>)),</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'z_step'</span>, VarianceThreshold(threshold<span class="op">=</span><span class="fl">0.05</span>)),</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'upsample'</span>, SMOTE(random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>knn_pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'scale'</span>, MinMaxScaler()),</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'impute'</span>, KNNImputer(n_neighbors<span class="op">=</span><span class="dv">4</span>, weights<span class="op">=</span><span class="st">"uniform"</span>)),</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'z_step'</span>, VarianceThreshold(threshold<span class="op">=</span><span class="fl">0.05</span>)),</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'upsample'</span>, SMOTE(random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>iter_pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'scale'</span>, StandardScaler()),</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'impute'</span>, IterativeImputer(max_iter<span class="op">=</span><span class="dv">10</span>, random_state<span class="op">=</span><span class="dv">0</span>)),</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'z_step'</span>, VarianceThreshold(threshold<span class="op">=</span><span class="fl">0.05</span>)),</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'upsample'</span>, SMOTE(random_state<span class="op">=</span><span class="dv">42</span>))</span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<!-- Let's just check how the data looks after we apply some pipeline. -->
+<!-- ```{python} -->
+<!-- pd.DataFrame(simple_pipe.fit_resample(X_train, y_train)[0], columns=simple_pipe.get_feature_names_out()).describe() -->
+<!-- ``` -->
+<p>Just to make things easier, we can create a “workflow” class, to store an “engine” such as random forest or xgboost, and some pipelines. We can also define a method that, for each pipeline added, we train the model and store the results.</p>
+<p>Here, our grid is set to choose the best model based on the F1 score, which rewards a balance between recall (sensitivity) and specificity.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> GridSearchCV</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.base <span class="im">import</span> clone</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ModelWorkflow(<span class="bu">object</span>):</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, name, fit_method, param_gridcv, extra_step_param<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.name <span class="op">=</span> name</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.pipes <span class="op">=</span> {}</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.fit_method <span class="op">=</span> fit_method</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.param_gridcv <span class="op">=</span> param_gridcv</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.extra_step_param <span class="op">=</span> extra_step_param</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.grid_results <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> add_pipe(<span class="va">self</span>, pipe_name, pipe):</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        old_dict <span class="op">=</span> <span class="va">self</span>.pipes</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.pipes[pipe_name] <span class="op">=</span> pipe</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> train_wf(<span class="va">self</span>, train_data, target_data):</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.grid_results <span class="op">=</span> {}</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> pipename, pipe <span class="kw">in</span> <span class="va">self</span>.pipes.items():</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>            skfolds <span class="op">=</span> StratifiedKFold(n_splits<span class="op">=</span><span class="dv">4</span>, shuffle<span class="op">=</span><span class="va">True</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>            <span class="co"># We don't want to take the risk of modifying the same Pipeline over and over. Let's clone.</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>            pipeline_for_cv <span class="op">=</span> clone(pipe)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>            <span class="co"># add the engine step to the Pipeline</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>            pipeline_for_cv.steps.append([<span class="st">'engine'</span>, <span class="bu">eval</span>(<span class="va">self</span>.fit_method)])</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>            <span class="co"># rename the grid params (it needs to have the last step name)</span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>            renamed_param_gridcv <span class="op">=</span> {<span class="ss">f"engine__</span><span class="sc">{</span>k<span class="sc">}</span><span class="ss">"</span>:v <span class="cf">for</span> k,v <span class="kw">in</span> <span class="va">self</span>.param_gridcv.items()}</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>            <span class="co"># add extra params for grid, if declared, and if there is a step with the same name</span></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>            step_names <span class="op">=</span> [x[<span class="dv">0</span>] <span class="cf">for</span> x <span class="kw">in</span> pipe.steps]</span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> k, v <span class="kw">in</span> <span class="va">self</span>.extra_step_param.items():</span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>                extra_param_target <span class="op">=</span> k.split(<span class="st">'__'</span>)[<span class="dv">0</span>]</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> extra_param_target <span class="kw">in</span> step_names:</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>                    renamed_param_gridcv[k] <span class="op">=</span> v</span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>            gridcv <span class="op">=</span> GridSearchCV(pipeline_for_cv, renamed_param_gridcv, cv<span class="op">=</span>skfolds,</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>                                  scoring<span class="op">=</span>{<span class="st">'AUC'</span>: <span class="st">'roc_auc'</span>, <span class="st">'F1'</span>: <span class="st">'f1'</span>, <span class="st">'Precision'</span>: <span class="st">'precision'</span>, <span class="st">'Recall'</span>: <span class="st">'recall'</span>},</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>                                  return_train_score<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>                                  refit<span class="op">=</span><span class="st">'F1'</span>, verbose<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.grid_results[pipename] <span class="op">=</span> gridcv.fit(train_data, target_data)</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_wf_results(<span class="va">self</span>):</span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>        results_list <span class="op">=</span> [pd.concat([</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>                        pd.DataFrame(<span class="va">self</span>.grid_results[pipe].cv_results_).<span class="bu">filter</span>(regex<span class="op">=</span><span class="vs">r'mean_test'</span>)</span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>                        ,pd.DataFrame(<span class="va">self</span>.grid_results[pipe].cv_results_[<span class="st">'params'</span>])],</span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>            axis<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>        ).assign(wf_Pipe<span class="op">=</span>pipe)</span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>                        <span class="cf">for</span> pipe <span class="kw">in</span> <span class="va">self</span>.pipes.keys()</span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> pd.concat(results_list, axis<span class="op">=</span><span class="dv">0</span>, ignore_index<span class="op">=</span><span class="va">True</span>).sort_values(<span class="st">'mean_test_F1'</span>, ascending<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can create a workflow for both random forest and xgboost, for example.</p>
+<p>As of xgboost, we need to be careful with the parameters. With a small dataset like this, I would initially expect that shallow trees might be better. Which, consequently, <a href="https://medium.com/data-design/xgboost-hi-im-gamma-what-can-i-do-for-you-and-the-tuning-of-regularization-a42ea17e6ab6">incentivises us to tune the <code>gamma</code> parameter</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xgboost</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>wf_rf <span class="op">=</span> ModelWorkflow(</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'RF'</span>,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    fit_method<span class="op">=</span><span class="st">'RandomForestClassifier(class_weight="balanced")'</span>,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    param_gridcv<span class="op">=</span>{<span class="st">'n_estimators'</span>: [<span class="dv">30</span>, <span class="dv">50</span>, <span class="dv">100</span>], <span class="st">'max_features'</span>: [<span class="st">'sqrt'</span>, <span class="st">'log2'</span>], <span class="st">'min_samples_split'</span>: [<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>]}</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">\</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  .add_pipe(<span class="st">'simple'</span>, simple_pipe) <span class="op">\</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  .add_pipe(<span class="st">'knn'</span>, knn_pipe) <span class="op">\</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  .add_pipe(<span class="st">'iter'</span>, iter_pipe)</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>wf_xgb <span class="op">=</span> ModelWorkflow(</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'XGB'</span>,</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    fit_method<span class="op">=</span><span class="st">'xgboost.XGBClassifier(objective="binary:logistic")'</span>,</span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    param_gridcv<span class="op">=</span>{</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'gamma'</span>: [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">10</span>],</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">'colsample_bytree'</span>: [<span class="fl">0.8</span>, <span class="dv">1</span>],</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">'subsample'</span>: [<span class="fl">0.6</span>, <span class="fl">0.8</span>],</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">'max_depth'</span>: [<span class="dv">6</span>, <span class="dv">10</span>],</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">'scale_pos_weight'</span>: [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">12</span>],</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">'eta'</span>: [<span class="fl">0.04</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>]</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>     }</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>) <span class="op">\</span></span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'simple'</span>, simple_pipe) <span class="op">\</span></span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'knn'</span>, knn_pipe) <span class="op">\</span></span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'iter'</span>, iter_pipe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We train by calling the method <code>train_wf</code> that we created.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>wf_rf.train_wf(X_train, y_train)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>wf_xgb.train_wf(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
+</div>
+<p>And we print the best results for each workflow.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(wf_rf.get_wf_results().head(n<span class="op">=</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    mean_test_AUC  mean_test_F1  mean_test_Precision  mean_test_Recall  engine__max_depth engine__max_features  engine__min_samples_split  engine__n_estimators wf_Pipe
+30       0.738630      0.469476             0.585508          0.392857                NaN                 sqrt                          2                   100     knn
+48       0.750864      0.466795             0.646520          0.371429                NaN                 sqrt                          2                   100    iter
+33       0.734520      0.459680             0.585474          0.378571                NaN                 log2                          2                   100     knn
+12       0.743153      0.451245             0.725280          0.328571                NaN                 sqrt                          2                   100  simple
+51       0.751455      0.444393             0.642857          0.342857                NaN                 log2                          2                   100    iter
+31       0.731682      0.439815             0.618632          0.342857                NaN                 sqrt                          4                   100     knn
+15       0.755419      0.429224             0.720105          0.307143                NaN                 log2                          2                   100  simple
+49       0.739662      0.403445             0.600578          0.307143                NaN                 sqrt                          4                   100    iter
+32       0.726547      0.402181             0.573315          0.314286                NaN                 sqrt                          6                   100     knn
+24       0.693599      0.398383             0.455233          0.357143               10.0                 sqrt                          2                   100     knn
+34       0.718022      0.393078             0.551116          0.307143                NaN                 log2                          4                   100     knn
+16       0.757634      0.385612             0.720617          0.264286                NaN                 log2                          4                   100  simple
+52       0.735575      0.379122             0.599834          0.278571                NaN                 log2                          4                   100    iter
+13       0.746590      0.363839             0.686837          0.250000                NaN                 sqrt                          4                   100  simple
+9        0.729660      0.360757             0.648352          0.250000               10.0                 log2                          2                   100  simple
+35       0.727836      0.360735             0.590370          0.264286                NaN                 log2                          6                   100     knn
+50       0.733367      0.358698             0.609537          0.257143                NaN                 sqrt                          6                   100    iter
+27       0.684026      0.356067             0.416853          0.314286               10.0                 log2                          2                   100     knn
+42       0.701232      0.349093             0.436640          0.292857               10.0                 sqrt                          2                   100    iter
+7        0.736069      0.335244             0.644805          0.228571               10.0                 sqrt                          4                   100  simple</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(wf_xgb.get_wf_results().head(n<span class="op">=</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     mean_test_AUC  mean_test_F1  mean_test_Precision  mean_test_Recall  engine__colsample_bytree  engine__eta  engine__gamma  engine__max_depth  engine__scale_pos_weight  engine__subsample wf_Pipe
+331       0.735590      0.515570             0.588192          0.464286                       1.0          0.3              0                 10                         4                0.8  simple
+75        0.736191      0.512626             0.590888          0.457143                       0.8          0.1              0                 10                         4                0.8  simple
+77        0.740194      0.510965             0.568632          0.471429                       0.8          0.1              0                 10                         8                0.8  simple
+332       0.732187      0.510458             0.538646          0.485714                       1.0          0.3              0                 10                         8                0.6  simple
+323       0.734653      0.509990             0.557581          0.471429                       1.0          0.3              0                  6                         4                0.8  simple
+141       0.739883      0.508434             0.555066          0.471429                       0.8          0.3              0                 10                         8                0.8  simple
+143       0.736651      0.507602             0.540142          0.485714                       0.8          0.3              0                 10                        12                0.8  simple
+131       0.732952      0.506534             0.562734          0.464286                       0.8          0.3              0                  6                         4                0.8  simple
+139       0.745379      0.505761             0.584492          0.450000                       0.8          0.3              0                 10                         4                0.8  simple
+271       0.728902      0.502959             0.536769          0.478571                       1.0          0.1              0                 10                        12                0.8  simple
+333       0.742393      0.501611             0.537428          0.478571                       1.0          0.3              0                 10                         8                0.8  simple
+266       0.744086      0.500251             0.571970          0.450000                       1.0          0.1              0                 10                         4                0.6  simple
+138       0.735399      0.499829             0.550993          0.464286                       0.8          0.3              0                 10                         4                0.6  simple
+911       0.745287      0.497154             0.482826          0.514286                       0.8          0.3              0                 10                        12                0.8    iter
+267       0.739617      0.497026             0.548581          0.457143                       1.0          0.1              0                 10                         4                0.8  simple
+334       0.731590      0.496459             0.502671          0.492857                       1.0          0.3              0                 10                        12                0.6  simple
+327       0.724803      0.496364             0.493590          0.500000                       1.0          0.3              0                  6                        12                0.8  simple
+79        0.727776      0.496086             0.524568          0.478571                       0.8          0.1              0                 10                        12                0.8  simple
+321       0.733050      0.495631             0.610765          0.421429                       1.0          0.3              0                  6                         1                0.8  simple
+330       0.736805      0.495289             0.537326          0.464286                       1.0          0.3              0                 10                         4                0.6  simple</code></pre>
+</div>
+</div>
+<p>We then define a function to see the effect of the tuning. It could also be a method for our workflow class, if we really wanted.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_tuning_results(df):</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    hyperparameters <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x:  <span class="st">'__'</span> <span class="kw">in</span> x, df.columns))</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    hyperparameters <span class="op">=</span> <span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> x:  <span class="bu">len</span>(<span class="bu">set</span>(df[x])) <span class="op">&gt;</span> <span class="dv">1</span>, hyperparameters))</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    fig, axs <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="bu">len</span>(hyperparameters))</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    fig.set_figwidth(<span class="dv">18</span>)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    fig.set_figheight(<span class="dv">5</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, param <span class="kw">in</span> <span class="bu">enumerate</span>(hyperparameters):</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>        sns.boxplot(x<span class="op">=</span>df[param].fillna(np.inf), y<span class="op">=</span>df[<span class="st">'mean_test_F1'</span>], ax<span class="op">=</span>axs[i])</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>        axs[i].set_xlabel(param)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>plot_tuning_results(wf_rf.get_wf_results())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="flow_files/figure-html/unnamed-chunk-18-3.png" class="img-fluid figure-img" width="1728"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>plot_tuning_results(wf_xgb.get_wf_results())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="flow_files/figure-html/unnamed-chunk-19-5.png" class="img-fluid figure-img" width="1728"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And…. <code>gamma</code> led to poor results. As we can also see in the random forest results, it seems like complex models are performing better. Shallow trees seem not to be the way to go.</p>
+<p>Hence, we should try to tune xgboost again with a better range of hyperparameters within the grid. We could try <code>min_child_weight</code> out, too, instead of <code>gamma</code>. It stops the node from splitting if the sample size there is below some number. It may stop an eventual overfitting for that reason. But, again, increasing <code>min_child_weight</code> might lead to less complex trees and worse results, in this particular dataset.</p>
+<p>Also, we can remove some hyperparameters from the tuning, and some pipelines, too, since <code>simple_pipe</code> got better results for xgboost during cross-validation. This is a risky move, because we don’t know how things perform in the testing set. But I want to make things simple in this article.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>wf_xgb_2 <span class="op">=</span> ModelWorkflow(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'XGB'</span>,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    fit_method<span class="op">=</span><span class="st">'xgboost.XGBClassifier(objective="binary:logistic")'</span>,</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    param_gridcv<span class="op">=</span>{</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'subsample'</span>: [<span class="fl">0.8</span>, <span class="fl">0.9</span>],</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'max_depth'</span>: [<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">20</span>],</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'scale_pos_weight'</span>: [<span class="dv">3</span>, <span class="dv">4</span>],</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">'eta'</span>: [<span class="fl">0.3</span>, <span class="fl">0.4</span>, <span class="fl">0.5</span>],</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">'min_child_weight'</span>: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>     }</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>) <span class="op">\</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  .add_pipe(<span class="st">'simple'</span>, simple_pipe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>wf_xgb.train_wf(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(wf_xgb_2.get_wf_results().head(n<span class="op">=</span><span class="dv">20</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    mean_test_AUC  mean_test_F1  mean_test_Precision  mean_test_Recall  engine__eta  engine__max_depth  engine__min_child_weight  engine__scale_pos_weight  engine__subsample wf_Pipe
+48       0.748011      0.535849             0.675998          0.450000          0.4                 15                         1                         3                0.8  simple
+74       0.721122      0.528857             0.596817          0.478571          0.5                 10                         1                         4                0.8  simple
+60       0.748307      0.521880             0.622366          0.457143          0.4                 20                         1                         3                0.8  simple
+39       0.731866      0.521422             0.589169          0.471429          0.4                 10                         1                         4                0.9  simple
+26       0.737919      0.518778             0.593019          0.464286          0.3                 20                         1                         4                0.8  simple
+13       0.739412      0.516436             0.600056          0.457143          0.3                 15                         1                         3                0.9  simple
+2        0.735590      0.515570             0.588192          0.464286          0.3                 10                         1                         4                0.8  simple
+24       0.727153      0.514035             0.578263          0.464286          0.3                 20                         1                         3                0.8  simple
+14       0.745456      0.511788             0.574588          0.464286          0.3                 15                         1                         4                0.8  simple
+38       0.752939      0.511211             0.573123          0.464286          0.4                 10                         1                         4                0.8  simple
+50       0.735515      0.509653             0.558957          0.471429          0.4                 15                         1                         4                0.8  simple
+25       0.751200      0.508937             0.578508          0.457143          0.3                 20                         1                         3                0.9  simple
+22       0.741642      0.508929             0.554377          0.471429          0.3                 15                         3                         4                0.8  simple
+40       0.730735      0.507735             0.566155          0.464286          0.4                 10                         2                         3                0.8  simple
+0        0.739581      0.506632             0.580987          0.457143          0.3                 10                         1                         3                0.8  simple
+83       0.713926      0.506455             0.548896          0.471429          0.5                 10                         3                         4                0.9  simple
+27       0.733862      0.506201             0.560227          0.464286          0.3                 20                         1                         4                0.9  simple
+36       0.739039      0.506063             0.573751          0.457143          0.4                 10                         1                         3                0.8  simple
+37       0.736360      0.503953             0.573942          0.450000          0.4                 10                         1                         3                0.9  simple
+86       0.736442      0.503385             0.563293          0.457143          0.5                 15                         1                         4                0.8  simple</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>plot_tuning_results(wf_xgb_2.get_wf_results())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="flow_files/figure-html/unnamed-chunk-22-7.png" class="img-fluid" width="1728"></p>
+</div>
+</div>
+<p>It seems like we got better results for xgboost with this last tuning.</p>
+<p>We could go on tweaking the hyperparamters over and over. For the sake of this case, we will stop right here.</p>
+<p>Let’s get the best parameters for random forest and xgboost, and see how they go in the test data frame. See: we have only analysed the performance during cross-validation. Fitting the pipelines in the entire training dataset will lead to a different “transformer”, and consequently a different model. It may or may not overfit. We often expect that the results during cross-validation testing will also be observed when we train on the whole training set and apply on the testing set we have splitted before, but this not necessarily happens. We hope it does, because that’s one of the purposes of cross-validation itself.</p>
+<p>Thankfully, the grid results has the attribute <code>best_estmator_</code>. It’s already retrained with the whole training dataset, as long as <code>GridSearchCV</code> is initialized with <code>refit=True</code>, or with a scorer, which is the case.</p>
+<p>We can get the best pipeline for each workflow, then get the best estimator and check the results in the test set.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix, ConfusionMatrixDisplay, f1_score, accuracy_score, recall_score, <span class="op">\</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    precision_score</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> compare_workflows(wf_list):</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    df_wf <span class="op">=</span> pd.DataFrame({<span class="st">'Workflow'</span>: wf_list})</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    df_wf[<span class="st">'Pipeline'</span>] <span class="op">=</span> [<span class="bu">list</span>(<span class="bu">eval</span>(x).pipes.keys()) <span class="cf">for</span> x <span class="kw">in</span> df_wf[<span class="st">'Workflow'</span>]]</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    df_wf <span class="op">=</span> df_wf.explode(<span class="st">'Pipeline'</span>).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    df_wf[<span class="st">'Metric'</span>] <span class="op">=</span> [[<span class="st">'f1_score'</span>, <span class="st">'recall_score'</span>, <span class="st">'precision_score'</span>, <span class="st">'accuracy_score'</span>]] <span class="op">*</span> <span class="bu">len</span>(df_wf)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>    df_wf <span class="op">=</span> df_wf.explode(<span class="st">'Metric'</span>).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    df_wf[<span class="st">'Score'</span>] <span class="op">=</span> [<span class="bu">eval</span>(metric)(<span class="bu">eval</span>(wf).grid_results[pipe].best_estimator_.predict(X_test), y_test)</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>                      <span class="cf">for</span> (wf, pipe, metric)</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>                      <span class="kw">in</span> <span class="bu">zip</span>(df_wf[<span class="st">'Workflow'</span>], df_wf[<span class="st">'Pipeline'</span>], df_wf[<span class="st">'Metric'</span>])</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>                      ]</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># For each workflow, get the Pipeliene that yields the best f1_score</span></span>
+<span id="cb40-18"><a href="#cb40-18" aria-hidden="true" tabindex="-1"></a>    df_f1 <span class="op">=</span> df_wf.loc[df_wf[<span class="st">'Metric'</span>] <span class="op">==</span> <span class="st">'f1_score'</span>]</span>
+<span id="cb40-19"><a href="#cb40-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-20"><a href="#cb40-20" aria-hidden="true" tabindex="-1"></a>    df_wf <span class="op">=</span> df_wf.merge(df_f1 <span class="op">\</span></span>
+<span id="cb40-21"><a href="#cb40-21" aria-hidden="true" tabindex="-1"></a>                        .loc[df_f1.groupby(<span class="st">'Workflow'</span>)[<span class="st">'Score'</span>].idxmax()] <span class="op">\</span></span>
+<span id="cb40-22"><a href="#cb40-22" aria-hidden="true" tabindex="-1"></a>                        .loc[:, [<span class="st">'Workflow'</span>, <span class="st">'Pipeline'</span>]]</span>
+<span id="cb40-23"><a href="#cb40-23" aria-hidden="true" tabindex="-1"></a>                        , how<span class="op">=</span><span class="st">'inner'</span>).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb40-24"><a href="#cb40-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-25"><a href="#cb40-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(sns.relplot(kind<span class="op">=</span><span class="st">'line'</span>, data<span class="op">=</span>df_wf, x<span class="op">=</span><span class="st">'Metric'</span>, y<span class="op">=</span><span class="st">'Score'</span>, hue<span class="op">=</span><span class="st">'Workflow'</span>))</span>
+<span id="cb40-26"><a href="#cb40-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb40-27"><a href="#cb40-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df_wf</span>
+<span id="cb40-28"><a href="#cb40-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-29"><a href="#cb40-29" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_rf'</span>, <span class="st">'wf_xgb'</span>, <span class="st">'wf_xgb_2'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fe870bc5f10&gt;
+    Workflow Pipeline           Metric     Score
+0      wf_rf   simple         f1_score  0.592593
+1      wf_rf   simple     recall_score  0.842105
+2      wf_rf   simple  precision_score  0.457143
+3      wf_rf   simple   accuracy_score  0.929032
+4     wf_xgb      knn         f1_score  0.613333
+5     wf_xgb      knn     recall_score  0.575000
+6     wf_xgb      knn  precision_score  0.657143
+7     wf_xgb      knn   accuracy_score  0.906452
+8   wf_xgb_2   simple         f1_score  0.542373
+9   wf_xgb_2   simple     recall_score  0.666667
+10  wf_xgb_2   simple  precision_score  0.457143
+11  wf_xgb_2   simple   accuracy_score  0.912903</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="flow_files/figure-html/unnamed-chunk-23-9.png" class="img-fluid figure-img" width="590"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It’s relatively difficult to compare <code>wf_rf</code> and <code>wf_xgb</code> here, because we have tuned wuth <code>refit='F1'</code>. Although these models we trained have similar F1 score, the relation between precision and recall are different. So we should choose the model depending of our purposes. Do we want better precision or better recall? Might be a good idea to tune with <code>refit='Recall'</code> instead, for example, and <em>then</em> select the best F1.</p>
+<p>What’s interesting is: although our second xgboost tuning led us to believe that we got better hyperparameters, it was outperformed by random forest in all the metrics.</p>
+<p>We conclude here the training with a F1 score of <code>0.613333</code>.</p>
+<p>For a better visualization, we plot the confusion matrix.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y_test, wf_xgb.grid_results[<span class="st">'knn'</span>].best_estimator_.predict(X_test))</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>disp.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7fe870c23040&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="flow_files/figure-html/unnamed-chunk-24-11.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="without-upsampling" class="level2">
+<h2 class="anchored" data-anchor-id="without-upsampling">Without upsampling</h2>
+<p>Here we create some pipelines that don’t include the upsampling step. We’ll see how it goes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>noup_simple_pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'impute'</span>, SimpleImputer(strategy<span class="op">=</span><span class="st">'median'</span>)),</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'z_step'</span>, VarianceThreshold(threshold<span class="op">=</span><span class="fl">0.05</span>))</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>noup_knn_pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'scale'</span>, MinMaxScaler()),</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'impute'</span>, KNNImputer(n_neighbors<span class="op">=</span><span class="dv">4</span>, weights<span class="op">=</span><span class="st">"uniform"</span>)),</span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'z_step'</span>, VarianceThreshold(threshold<span class="op">=</span><span class="fl">0.05</span>))</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>noup_iter_pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'scale'</span>, StandardScaler()),</span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'impute'</span>, IterativeImputer(max_iter<span class="op">=</span><span class="dv">10</span>, random_state<span class="op">=</span><span class="dv">0</span>)),</span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'z_step'</span>, VarianceThreshold(threshold<span class="op">=</span><span class="fl">0.05</span>))</span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>wf_noup_rf <span class="op">=</span> ModelWorkflow(</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'RF'</span>,</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>    fit_method<span class="op">=</span><span class="st">'RandomForestClassifier(class_weight="balanced")'</span>,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    param_gridcv<span class="op">=</span>{<span class="st">'n_estimators'</span>: [<span class="dv">100</span>], <span class="st">'max_features'</span>: [<span class="st">'sqrt'</span>, <span class="st">'log2'</span>], <span class="st">'min_samples_split'</span>: [<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>]</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>        , <span class="st">'max_depth'</span>: [<span class="dv">6</span>, <span class="dv">10</span>, <span class="va">None</span>]}</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">\</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'noup_simple'</span>, noup_knn_pipe) <span class="op">\</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'noup_knn'</span>, noup_knn_pipe) <span class="op">\</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'noup_iter'</span>, noup_iter_pipe)</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>wf_noup_xgb <span class="op">=</span> ModelWorkflow(</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'XGB'</span>,</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    fit_method<span class="op">=</span><span class="st">'xgboost.XGBClassifier(objective="binary:logistic")'</span>,</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    param_gridcv<span class="op">=</span>{</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'gamma'</span>: [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">10</span>],</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'colsample_bytree'</span>: [<span class="fl">0.8</span>, <span class="dv">1</span>],</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">'subsample'</span>: [<span class="fl">0.6</span>, <span class="fl">0.8</span>],</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">'max_depth'</span>: [<span class="dv">6</span>, <span class="dv">10</span>, <span class="dv">14</span>],</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">'scale_pos_weight'</span>: [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">12</span>, scale_pos_wight_suggestion],</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">'eta'</span>: [<span class="fl">0.04</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>]</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>) <span class="op">\</span></span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'simple'</span>, simple_pipe) <span class="op">\</span></span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'knn'</span>, knn_pipe) <span class="op">\</span></span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'iter'</span>, iter_pipe)</span>
+<span id="cb46-26"><a href="#cb46-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-27"><a href="#cb46-27" aria-hidden="true" tabindex="-1"></a>wf_noup_rf.train_wf(X_train, y_train)</span>
+<span id="cb46-28"><a href="#cb46-28" aria-hidden="true" tabindex="-1"></a>wf_noup_xgb.train_wf(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
+</div>
+<p>We compare the results with the upsampling ones.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_rf'</span>, <span class="st">'wf_xgb'</span>, <span class="st">'wf_xgb_2'</span>, <span class="st">'wf_noup_rf'</span>, <span class="st">'wf_noup_xgb'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fe87096d0a0&gt;
+       Workflow     Pipeline           Metric     Score
+0         wf_rf       simple         f1_score  0.592593
+1         wf_rf       simple     recall_score  0.842105
+2         wf_rf       simple  precision_score  0.457143
+3         wf_rf       simple   accuracy_score  0.929032
+4        wf_xgb          knn         f1_score  0.613333
+5        wf_xgb          knn     recall_score  0.575000
+6        wf_xgb          knn  precision_score  0.657143
+7        wf_xgb          knn   accuracy_score  0.906452
+8      wf_xgb_2       simple         f1_score  0.542373
+9      wf_xgb_2       simple     recall_score  0.666667
+10     wf_xgb_2       simple  precision_score  0.457143
+11     wf_xgb_2       simple   accuracy_score  0.912903
+12   wf_noup_rf  noup_simple         f1_score  0.655172
+13   wf_noup_rf  noup_simple     recall_score  0.826087
+14   wf_noup_rf  noup_simple  precision_score  0.542857
+15   wf_noup_rf  noup_simple   accuracy_score  0.935484
+16  wf_noup_xgb       simple         f1_score  0.625000
+17  wf_noup_xgb       simple     recall_score  0.689655
+18  wf_noup_xgb       simple  precision_score  0.571429
+19  wf_noup_xgb       simple   accuracy_score  0.922581</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="flow_files/figure-html/unnamed-chunk-28-13.png" class="img-fluid" width="616"></p>
+</div>
+</div>
+<p>Models performed better without upsampling.</p>
+<p>Now we have a better F1: <code>0.655172</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>cm <span class="op">=</span> confusion_matrix(y_test, wf_noup_rf.grid_results[<span class="st">'noup_simple'</span>].best_estimator_.predict(X_test))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>disp <span class="op">=</span> ConfusionMatrixDisplay(confusion_matrix<span class="op">=</span>cm)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>disp.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;sklearn.metrics._plot.confusion_matrix.ConfusionMatrixDisplay object at 0x7fe870ecfac0&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="flow_files/figure-html/unnamed-chunk-29-15.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="pca" class="level2">
+<h2 class="anchored" data-anchor-id="pca">PCA</h2>
+<p>Principal component analysis (PCA) is an unsupervised method that uses linear combinations of features to define new ones. It’s basically a method used to reduce dimensionality. Before applying it, you really need to standardize the features, because skewed distributions tend to harm variance calculations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.decomposition <span class="im">import</span> PCA</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>pca_pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'impute'</span>, SimpleImputer(strategy<span class="op">=</span><span class="st">'median'</span>)),</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'z_step'</span>, VarianceThreshold(threshold<span class="op">=</span><span class="fl">0.05</span>)),</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'scale'</span>, StandardScaler()),</span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'PCA'</span>, PCA())</span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>wf_pca_rf <span class="op">=</span> ModelWorkflow(</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'RF'</span>,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    fit_method<span class="op">=</span><span class="st">'RandomForestClassifier(class_weight="balanced")'</span>,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    param_gridcv<span class="op">=</span>{<span class="st">'n_estimators'</span>: [<span class="dv">100</span>], <span class="st">'max_features'</span>: [<span class="st">'sqrt'</span>, <span class="st">'log2'</span>], <span class="st">'min_samples_split'</span>: [<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>]</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>        , <span class="st">'max_depth'</span>: [<span class="dv">6</span>, <span class="dv">10</span>, <span class="va">None</span>]},</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>    extra_step_param<span class="op">=</span>{<span class="st">'PCA__n_components'</span>: [<span class="va">None</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">21</span>]}</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>) <span class="op">\</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'pca'</span>, pca_pipe)</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>wf_pca_xgb <span class="op">=</span> ModelWorkflow(</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>    name<span class="op">=</span><span class="st">'XGB'</span>,</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>    fit_method<span class="op">=</span><span class="st">'xgboost.XGBClassifier(objective="binary:logistic")'</span>,</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>    param_gridcv<span class="op">=</span>{</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'max_depth'</span>: [<span class="dv">6</span>, <span class="dv">10</span>, <span class="dv">14</span>, <span class="dv">18</span>],</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'scale_pos_weight'</span>: [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">8</span>, <span class="dv">12</span>, scale_pos_wight_suggestion],</span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'eta'</span>: [<span class="fl">0.04</span>, <span class="fl">0.1</span>, <span class="fl">0.3</span>]</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>    extra_step_param<span class="op">=</span>{<span class="st">'PCA__n_components'</span>: [<span class="va">None</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">14</span>, <span class="dv">21</span>]}</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a>) <span class="op">\</span></span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a>    .add_pipe(<span class="st">'pca'</span>, pca_pipe)</span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>wf_pca_rf.train_wf(X_train, y_train)</span>
+<span id="cb53-23"><a href="#cb53-23" aria-hidden="true" tabindex="-1"></a>wf_pca_xgb.train_wf(X_train, y_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>compare_workflows([<span class="st">'wf_noup_rf'</span>, <span class="st">'wf_noup_xgb'</span>, <span class="st">'wf_pca_rf'</span>, <span class="st">'wf_pca_xgb'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;seaborn.axisgrid.FacetGrid object at 0x7fe8705ca9d0&gt;
+       Workflow     Pipeline           Metric     Score
+0    wf_noup_rf  noup_simple         f1_score  0.655172
+1    wf_noup_rf  noup_simple     recall_score  0.826087
+2    wf_noup_rf  noup_simple  precision_score  0.542857
+3    wf_noup_rf  noup_simple   accuracy_score  0.935484
+4   wf_noup_xgb       simple         f1_score  0.625000
+5   wf_noup_xgb       simple     recall_score  0.689655
+6   wf_noup_xgb       simple  precision_score  0.571429
+7   wf_noup_xgb       simple   accuracy_score  0.922581
+8     wf_pca_rf          pca         f1_score  0.530612
+9     wf_pca_rf          pca     recall_score  0.928571
+10    wf_pca_rf          pca  precision_score  0.371429
+11    wf_pca_rf          pca   accuracy_score  0.925806
+12   wf_pca_xgb          pca         f1_score  0.528302
+13   wf_pca_xgb          pca     recall_score  0.777778
+14   wf_pca_xgb          pca  precision_score  0.400000
+15   wf_pca_xgb          pca   accuracy_score  0.919355</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="flow_files/figure-html/unnamed-chunk-33-17.png" class="img-fluid" width="616"></p>
+</div>
+</div>
+<p>So, PCA led to worse results. This probably means that the variables created do not separate well between <code>y</code> labels. Let’s check that. First, let’s see the best number of components.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>plot_tuning_results(wf_pca_rf.get_wf_results())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="flow_files/figure-html/unnamed-chunk-34-19.png" class="img-fluid" width="1728"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>plot_tuning_results(wf_pca_xgb.get_wf_results())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="flow_files/figure-html/unnamed-chunk-35-21.png" class="img-fluid" width="1728"></p>
+</div>
+</div>
+<p>Which is <code>21</code>.</p>
+<p>Let’s create the pipe with this configuration, and transform. Pairplotting with 21 variables might not be the best idea, unless you want to transform your computer into a launching spaceship. We’ll plot only the first three components. See how the label is entangled in the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>pca_test_pipe <span class="op">=</span> Pipeline([</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'impute'</span>, SimpleImputer(strategy<span class="op">=</span><span class="st">'median'</span>)),</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'z_step'</span>, VarianceThreshold(threshold<span class="op">=</span><span class="fl">0.05</span>)),</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'scale'</span>, StandardScaler()),</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'PCA'</span>, PCA(n_components <span class="op">=</span> <span class="dv">21</span>))</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>X_train_pca_transformed <span class="op">=</span> pd.DataFrame(pca_test_pipe.fit_transform(X_train),</span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>                                       columns<span class="op">=</span>pca_test_pipe.get_feature_names_out())</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-11"><a href="#cb58-11" aria-hidden="true" tabindex="-1"></a>X_train_pca_transformed <span class="op">=</span> pd.concat([X_train_pca_transformed, y_train.reset_index(drop<span class="op">=</span><span class="va">True</span>)], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sns.pairplot(X_train_pca_transformed.loc[:, [<span class="st">'pca0'</span>, <span class="st">'pca1'</span>, <span class="st">'pca2'</span>, <span class="st">'label'</span>]]</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>                   , hue<span class="op">=</span><span class="st">'label'</span>, diag_kind<span class="op">=</span><span class="st">'kde'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="Figure_1.png" class="img-fluid"></p>
+<p>However, let’s remember that we are feeding PCA with encoded categorical values. PCA is better for continuous variables, not binary (encoded) ones. We could try again, with a better pipeline that one-hot encodes <em>after</em> PCA. Since we already split <code>X</code> in training and testing, together with the fact that variables are not much correlated in the original dataset anyway, we’ll stop here. PCA really shines when there are correlated features.</p>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      let href = ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
